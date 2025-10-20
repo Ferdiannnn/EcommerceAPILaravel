@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -16,20 +17,17 @@ class ProductController extends Controller
             return Product::paginate(100);
         });
 
-        return response()->json($Cache);
+        return ProductResource::collection($Cache->load('Category'));
     }
 
     public function show($id)
     {
         $products = Product::FindOrFail($id);
-        return response()->json([
-            'Data' => $products
-        ], 200);
+        return new ProductResource($products->load('Category'));
     }
 
     public function store(Request $request)
     {
-
         $request->validate([
             'category_id' => 'required',
             'title' => 'required',
@@ -49,10 +47,7 @@ class ProductController extends Controller
             'img' => $request->img
         ]);
 
-        return response()->json([
-            'message' => 'Success',
-            'data' => $products
-        ], 201);
+        return new ProductResource($products->load('Category'));
     }
 
     public function update($id, Request $request)
@@ -80,10 +75,7 @@ class ProductController extends Controller
                 'img' => $request->img
             ]);
 
-            return response()->json([
-                'message' => 'Success',
-                'data' => $products
-            ], 200);
+            return new ProductResource($products->load('Category'));
         } else {
             return response()->json([
                 'message' => 'Unauthorized',
