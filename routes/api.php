@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\TransactionController;
 use App\Models\Category;
 
 Route::post('login', [AuthController::class, 'login']);
@@ -25,4 +26,10 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/categorys', [CategoryController::class, 'store']);
     Route::put('/categorys/{id}', [CategoryController::class, 'update']);
     Route::delete('/categorys/{id}', [CategoryController::class, 'destroy']);
+
+    //Transaction
+    Route::get('/transactions', [TransactionController::class, 'index']);
+    Route::post('/transactions', [TransactionController::class, 'store']);
+    Route::put('/transactions/{id}', [TransactionController::class, 'update']);
+    Route::delete('/transactions/{ref}', [TransactionController::class, 'destroy']);
 });
